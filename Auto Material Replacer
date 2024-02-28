@@ -1,0 +1,26 @@
+@name Auto Material Replacer
+
+if(first() | dupefinished()) {
+    Materials = array(
+#   [Orginal Material]        [New Material]
+
+    "models/debug/debugwhite","models/wireframe",
+    "models/debug/debugwhite","models/wireframe")
+    
+    Cnt = 0
+    findByClass("prop_*")
+    findClipToPlayerProps(owner())
+    
+    foreach(X, Prop:entity = findToArray()) {
+        for(I=1,Materials:count(),2) {
+            if(Prop:getMaterial() == Materials[I,string]) {
+                Prop:setMaterial(Materials[I+1,string])
+                Cnt++
+            }
+        }
+    }
+    print("Changed " + Cnt + " props materials.")
+    selfDestruct()
+}
+
+# made by dr. jxck | inspired by High HatSnek
