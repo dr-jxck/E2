@@ -1,0 +1,96 @@
+@name On Screen Timer
+@inputs EGP:wirelink
+@persist Display:string A Config:array
+
+if(first()) {
+    Config = array(    # [Config]             [Default Value]
+                    
+    vec2(535,1050),    # Position             (535,1050)
+    35,                # Size                 (35)
+    vec(255,255,255),  # Color                (255,255,255)
+    "n"                # Start/Stop Keybind   (n)
+    )
+    
+    EGP:egpClear()
+    I=0
+    A = 0
+    Display = "00:00:00"
+    timer("reset",0)
+}
+
+function void main() {
+    I = 0
+    
+    I++
+    EGP:egpBox(I,Config[1,vector2],vec2(100,100)) # 535,1050
+    EGP:egpAlpha(I,0)
+    
+    I++
+    EGP:egpText(I,Display,vec2(0,0))
+    EGP:egpSize(I,Config[2,number])
+    EGP:egpColor(I,Config[3,vector])
+    EGP:egpAlign(I,1,1)
+    EGP:egpParent(I,I-1)
+}
+
+event keyPressed(Ply:entity, Key:string, Down:number, Bind:string) {
+    Bind=Bind
+    if(Ply == owner() & Down & Key == Config[4,string]) {
+        if(A) {
+            A = 0
+            stoptimer("count")
+            main()
+            timer("reset",5000)
+        }
+        else {
+            A = 1
+            timer("count",1000)
+        }
+    }
+}
+
+if(clk("count") & A) {
+    stoptimer("count")
+    Time = Display:explode(":")
+    Sec = Time[3,string]:toNumber()
+    Min = Time[2,string]:toNumber()
+    Hr = Time[1,string]:toNumber()
+    
+    Sec++
+    
+    if(Sec >= 60) {
+        Min++
+        Sec = 0
+        
+        if(Min >= 60) {
+            Hr++
+            Min = 0
+        }
+    }
+    
+    H = Hr:toString()
+    M = Min:toString()
+    Ss = Sec:toString()
+    
+    if(Hr < 10) {
+        H = "0"+H
+    }
+    if(Min < 10) {
+        M = "0"+M
+    }
+    if(Sec < 10) {
+        Ss = "0"+Ss
+    }
+    
+    Display = H+":"+M+":"+Ss
+    timer("count",1000)
+    main()
+}
+
+if(clk("reset")) {
+    I = 0
+    Display = "00:00:00"
+    main()
+}
+
+# made by dr. jxck
