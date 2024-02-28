@@ -1,0 +1,127 @@
+@name Auto BP
+@persist [Active, Prefix]:string CMDS:array J L
+
+function void pprint(Ctx:string) {
+    printColor(vec(100,100,255),"Auto BP",vec(225)," | ",vec(255),Ctx)
+}
+
+if(first()) {
+    Prefix = ".bp"
+    
+    for(I=1,10) {
+        print(" ")
+    }
+    
+    CMDS = array("prop","gun","job","shipment","ammo","door","lockpick")
+    Active = ""
+    J = 0
+    L = 0
+    
+    pprint("Use '" + Prefix + "' for commands list.")
+    
+    
+}
+
+event chat(Ply:entity, Msg:string, X) {
+    if(Ply == owner() & Msg:left(Prefix:length()) == Prefix & !X) {
+        CMD = Msg:explode(" ")[2,string]
+        
+        if(!CMD) {
+            pprint("Commands:")
+            for(Z=1,CMDS:count()) {
+                print(Prefix + " " + CMDS[Z,string])
+            }
+            hideChat(1)
+            exit()
+        }
+        
+        for(I=1,CMDS:count()) {
+            if(CMDS[I,string] == CMD) {
+                if(Active) {
+                    if(CMD == Active) {
+                        Active = ""
+                        pprint("'" + CMD + "' stopped.")
+                        X = 1
+                    }
+                    else {
+                        pprint("Stop '" + Active + "' before using '" + CMD + "'.")
+                    }
+                }
+                else {
+                    Active = CMD
+                    timer(CMD,1)
+                    pprint("'" + CMD + "' started, use '" + Prefix + " " + CMD + "' to stop.")
+                }
+            }
+        }
+        if(!Active & !X) {
+            pprint("'" + CMD + "' is not a valid command.")
+        }
+        hideChat(1)
+    }
+}
+
+if(clk("prop")) {
+    if(Active == "prop") {
+        concmd("gm_spawn models/hunter/plates/plate.mdl")
+        concmd("gmod_undo")
+        timer("prop", 10)
+    }
+}
+
+if(clk("door")) {
+    if(Active == "door") {
+        concmd("say /toggleown")
+        timer("door",500)
+    }
+}
+
+if(clk("ammo")) {
+    if(Active == "ammo") {
+        concmd("darkrp buyammo ammo_stungun") 
+        timer("Ammo", 500)
+    }
+}
+
+if(clk("job")) {
+    if(Active == "job") {
+        if(J) {
+            concmd("say /citizen")
+            J = 0
+            timer("job",31000)
+        }
+        else {
+            concmd("say /time4somebonelesspizzassssss")
+            J = 1
+            timer("job",31000)
+        }
+    }
+}
+
+if(clk("shipment")) {
+    if(Active == "shipment") {
+        if(owner():team():teamName() == "Bartender") {
+            concmd("darkrp buyshipment water") 
+            timer("ship", 500)
+        }
+        else {
+            concmd("say /bartender")
+            timer("shipment",500)
+        }
+    }
+}
+
+if(clk("gun")) {
+    if(Active == "gun") {
+        if(owner():team():teamName() == "Bartender") {
+            concmd("say /buy water") 
+            timer("gun", 500)
+        }
+        else {
+            concmd("say /bartender")
+            timer("gun",500)
+        }
+    }
+}
+
+# made by dr. jxck
