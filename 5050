@@ -1,0 +1,209 @@
+@name 5050
+@inputs EGP:wirelink User:entity
+@persist Active 
+
+if(first()) {
+    entity():setMaterial("Models/effects/vol_light001")
+    entity():createWire(entity():isWeldedTo(), "EGP", "wirelink")
+    entity():createWire(entity():isWeldedTo(), "User", "User")
+    EGP:egpDrawTopLeft(1)
+    timer("reset",1000)
+}
+
+function void main() {
+    I=0
+    EGP:egpClear()
+    
+    I++
+    EGP:egpRoundedBox(I,vec2(5,5),vec2(502,100))
+    EGP:egpColor(I,vec(100,100,255))
+    EGP:egpAlign(I,0,0)
+    
+    I++
+    EGP:egpText(I,"Play 50/50",vec2(0,0))
+    EGP:egpSize(I,75)
+    EGP:egpColor(I,vec(0))
+    EGP:egpAlign(I,1,1)
+    EGP:egpParent(I,I-1)
+    
+    if(owner():money() >= 1000) {
+        I++
+        EGP:egpRoundedBox(I,vec2(5,115),vec2(502,75))
+        EGP:egpAlign(I,1,1)
+        EGP:egpColor(I,vec(77, 140, 87))
+        
+        I++
+        EGP:egpText(I,"$1,000",vec2(0,0))
+        EGP:egpSize(I,50)
+        EGP:egpColor(I,vec(0))
+        EGP:egpParent(I,I-1)
+        EGP:egpAlign(I,1,1)
+    }
+
+    if(owner():money() >= 10000) {
+        I++
+        EGP:egpRoundedBox(I,vec2(5,195),vec2(502,75))
+        EGP:egpAlign(I,1,2)
+        #EGP:egpParent(I,I-2)
+        EGP:egpColor(I,vec(254, 240, 1))
+        
+        I++
+        EGP:egpText(I,"$10,000",vec2(0,0))
+        EGP:egpSize(I,50)
+        EGP:egpColor(I,vec(0))
+        EGP:egpParent(I,I-1)
+        EGP:egpAlign(I,1,1)
+    }
+    
+    if(owner():money() >= 100000) {
+        I++
+        EGP:egpRoundedBox(I,vec2(5,275),vec2(502,75))
+        EGP:egpAlign(I,1,2)
+        #EGP:egpParent(I,I-1)
+        EGP:egpColor(I,vec(255, 206, 3))
+        
+        I++
+        EGP:egpText(I,"$100,000",vec2(0,0))
+        EGP:egpSize(I,50)
+        EGP:egpColor(I,vec(0))
+        EGP:egpParent(I,I-1)
+        EGP:egpAlign(I,1,1)
+    }
+    
+    if(owner():money() >= 500000) {
+        I++
+        EGP:egpRoundedBox(I,vec2(5,355),vec2(502,75))
+        EGP:egpAlign(I,1,2)
+        #EGP:egpParent(I,I-1)
+        EGP:egpColor(I,vec(253, 154, 1))
+        
+        I++
+        EGP:egpText(I,"$500,000",vec2(0,0))
+        EGP:egpSize(I,50)
+        EGP:egpColor(I,vec(0))
+        EGP:egpParent(I,I-1)
+        EGP:egpAlign(I,1,1)
+    }
+    
+    if(owner():money() >= 1000000) {
+        I++
+        EGP:egpRoundedBox(I,vec2(5,435),vec2(502,75))
+        EGP:egpAlign(I,1,1)
+        #EGP:egpParent(I,I-2)
+        EGP:egpColor(I,vec(255, 44, 5))
+        
+        I++
+        EGP:egpText(I,"$1,000,000",vec2(0,0))
+        EGP:egpSize(I,50)
+        EGP:egpColor(I,vec(0))
+        EGP:egpParent(I,I-1)
+        EGP:egpAlign(I,1,1)
+    }
+    
+    timer("reset",1000)
+}
+
+function void game(E:entity,Amnt:number) {
+    stopAllTimers()
+    I=0
+    EGP:egpClear()
+    if(round(random(0,1))) {
+        soundPlay(1,0.2,"billyerror/oof.mp3")
+        
+        I++
+        EGP:egpRoundedBox(I,vec2(5),vec2(502,502))
+        EGP:egpColor(I,vec(255,100,100))
+        EGP:egpAlign(I,1,1)
+        
+        I++
+        EGP:egpText(I,"You Lose",vec2(0,0))
+        EGP:egpSize(I,100)
+        EGP:egpColor(I,vec(0))
+        EGP:egpAlign(I,1,1)
+        EGP:egpParent(I,I-1)
+        
+        I++
+        EGP:egpText(I,E:name(),vec2(0,-225))
+        EGP:egpSize(I,25)
+        EGP:egpColor(I,vec(0))
+        EGP:egpAlign(I,1,1)
+        EGP:egpParent(I,1)
+    }
+    else {
+        soundPlay(1,1.7,"mcasino/slots_spin.mp3")
+        
+        I++
+        EGP:egpRoundedBox(I,vec2(5),vec2(502,502))
+        EGP:egpColor(I,vec(100,255,100))
+        EGP:egpAlign(I,1,1)
+        
+        I++
+        EGP:egpText(I,"You Win",vec2(0,-50))
+        EGP:egpSize(I,100)
+        EGP:egpColor(I,vec(0))
+        EGP:egpAlign(I,1,1)
+        EGP:egpParent(I,I-1)
+        
+        I++
+        EGP:egpText(I,"$" + Amnt,vec2(0,50))
+        EGP:egpSize(I,75)
+        EGP:egpColor(I,vec(0))
+        EGP:egpAlign(I,1,1)
+        EGP:egpParent(I,I-2)
+        
+        I++
+        EGP:egpText(I,E:name(),vec2(0,-225))
+        EGP:egpSize(I,25)
+        EGP:egpColor(I,vec(0))
+        EGP:egpAlign(I,1,1)
+        EGP:egpParent(I,1)
+        
+        moneyGive(E,Amnt*2)
+    }
+    
+    timer("reset",2000)
+}
+
+if(clk("reset")) {
+    Active = 0
+    main()
+}
+
+event input(S:string) {
+    if(S == "User" & User & !Active) {
+        if(inrange(EGP:egpCursor(User), EGP:egpPos(3), EGP:egpPos(3) + EGP:egpSize(3))) {
+            Active = 1
+            moneyRequest(User,1000,10)
+        }
+        elseif(inrange(EGP:egpCursor(User), EGP:egpPos(5), EGP:egpPos(5) + EGP:egpSize(5))) {
+            Active = 1
+            moneyRequest(User,10000,10)
+        }
+        elseif(inrange(EGP:egpCursor(User), EGP:egpPos(7), EGP:egpPos(7) + EGP:egpSize(7))) {
+            Active = 1
+            moneyRequest(User,100000,10)
+        }
+        elseif(inrange(EGP:egpCursor(User), EGP:egpPos(9), EGP:egpPos(9) + EGP:egpSize(9))) {
+            Active = 1
+            moneyRequest(User,500000,10)
+        }
+        elseif(inrange(EGP:egpCursor(User), EGP:egpPos(11), EGP:egpPos(11) + EGP:egpSize(11))) {
+            Active = 1
+            moneyRequest(User,1000000,10)
+        }
+    }
+}
+
+if(moneyClk()) {
+    game(moneyClkPlayer(),moneyClkAmount())
+}
+
+if(moneyNoClk()) {
+    timer("reset",500)
+}
+
+if(moneyTimeout()) {
+    Active = 0
+}
+
+# made by dr. jxck
