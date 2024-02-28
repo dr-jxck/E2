@@ -1,0 +1,451 @@
+@name Tic Tac Toe
+@inputs EGP:wirelink User:entity
+@persist Win:string Players:array Button:array Turn:array Table:table BottomText:string Cnt
+
+# Place E2 on an EGP3 Screen.
+
+if(first()) {
+    entity():setMaterial("Models/effects/vol_light001")
+    entity():createWire(entity():isWeldedTo(), "EGP", "wirelink")
+    entity():createWire(entity():isWeldedTo(), "User", "User")
+    
+    EGP:egpClear()
+    Win = ""
+    Players = array(noentity(),noentity())
+    Turn = array(noentity(),"")
+    BottomText = "'s Turn"
+    Cnt = 0
+    
+    Table = table(array("","","","","","","","",""))
+    
+    timer("reset",10)
+}
+    
+function void title() {
+    Win = "title"
+    EGP:egpClear()
+    EGP:egpDrawTopLeft(1)
+    I=0
+    
+    I++
+    EGP:egpBox(I,vec2(0,0),vec2(512,512))
+    EGP:egpColor(I,vec(50))
+    EGP:egpAlign(I,1,1)
+    
+    I++
+    EGP:egpText(I,"Tic Tac Toe",vec2(0,-150))
+    EGP:egpSize(I,75)
+    EGP:egpColor(I,vec(255))
+    EGP:egpAlign(I,1,1)
+    EGP:egpParent(I,I-1)
+    
+    I++
+    EGP:egpRoundedBox(I,vec2(150,265),vec2(200,75))
+    EGP:egpColor(I,vec(100,255,100))
+    EGP:egpAlign(I,1,1)
+    
+    I++
+    EGP:egpText(I,"Play",vec2(0,0))
+    EGP:egpSize(I,45)
+    EGP:egpColor(I,vec(0))
+    EGP:egpAlign(I,1,1)
+    EGP:egpParent(I,I-1)
+    
+    I++
+    EGP:egpText(I,"made by dr. jxck",vec2(0,195))
+    EGP:egpSize(I,20)
+    EGP:egpColor(I,vec(255))
+    EGP:egpAlign(I,1,1)
+    EGP:egpParent(I,I-2)
+}
+
+function void join(N:number, E:entity) {
+    Win = "join"
+    
+    if(!N) {
+        Button = array("Click To Join","Click To Join")
+    }
+    else {
+        Players[N,entity] = E
+        Button[N,string] = E:name()
+    }
+    
+    EGP:egpClear()
+    I = 0
+    
+    I++
+    EGP:egpBox(I,vec2(0,0),vec2(512,512))
+    EGP:egpColor(I,vec(50))
+    
+    I++
+    EGP:egpText(I,"Tic Tac Toe",vec2(0,-150))
+    EGP:egpSize(I,75)
+    EGP:egpColor(I,vec(255))
+    EGP:egpAlign(I,1,1)
+    EGP:egpParent(I,I-1)
+        
+    I++
+    EGP:egpRoundedBox(I,vec2(81,225),vec2(350,50))
+    EGP:egpColor(I,vec(100,100,255))
+    EGP:egpAlign(I,1,1)
+    
+    I++
+    EGP:egpText(I,"X: " + Button[1,string],vec2(0,0))
+    EGP:egpSize(I,25)
+    EGP:egpColor(I,vec(225))
+    EGP:egpAlign(I,1,1)
+    EGP:egpParent(I,I-1)
+    
+    I++
+    EGP:egpRoundedBox(I,vec2(81,365),vec2(350,50))
+    EGP:egpColor(I,vec(100,100,255))
+    EGP:egpAlign(I,1,1)
+    
+    I++
+    EGP:egpText(I,"O: " + Button[2,string],vec2(0,0))
+    EGP:egpSize(I,25)
+    EGP:egpColor(I,vec(225))
+    EGP:egpAlign(I,1,1)
+    EGP:egpParent(I,I-1)
+    
+    if(Players[1,entity] & Players[2,entity]) {
+        I++
+        EGP:egpRoundedBox(I,vec2(181,435),vec2(150,50))
+        EGP:egpColor(I,vec(100,255,100))
+        EGP:egpAlign(I,1,1)
+        
+        I++
+        EGP:egpText(I,"Start",vec2(0,0))
+        EGP:egpSize(I,35)
+        EGP:egpColor(I,vec(0))
+        EGP:egpAlign(I,1,1)
+        EGP:egpParent(I,I-1)
+        
+    }
+    timer("reset",10000)
+}
+
+function void win(N) {
+    Win = "Win"
+    
+    A1 = vec2(150,190)
+    A2 = vec2(255,190)
+    A3 = vec2(360,190)
+    
+    B1 = vec2(150,295)
+    B3 = vec2(360,295)
+    
+    C1 = vec2(150,400)
+    C2 = vec2(255,400)
+    C3 = vec2(360,400)
+    
+    if(N == 1) {
+        EGP:egpLine(99,A1,A3)
+    }
+    if(N == 2) {
+        EGP:egpLine(99,A1,C3)
+    }
+    if(N == 3) {
+        EGP:egpLine(99,A1,C1)
+    }
+    if(N == 4) {
+        EGP:egpLine(99,A2,C2)
+    }
+    if(N == 5) {
+        EGP:egpLine(99,A3,C3)
+    }
+    if(N == 6) {
+        EGP:egpLine(99,B1,B3)
+    }
+    if(N == 7) {
+        EGP:egpLine(99,C1,C3)
+    }
+    if(N == 8) {
+        EGP:egpLine(99,C1,A3)
+    }
+    
+    if(Turn[1,entity] == Players[1,entity]) {
+        Turn[1,entity] = Players[2,entity]
+    }
+    else {
+        Turn[1,entity] = Players[1,entity]
+    }
+    
+    timer("reset",5000)
+    BottomText = " wins"
+    EGP:egpColor(99,vec(255,100,100))
+    return
+}
+
+function void game() {
+    if(Turn[2,string] == "X") {
+        Turn[1,entity] = Players[2,entity]
+        Turn[2,string] = "O"
+    }
+    else {
+        Turn[1,entity] = Players[1,entity]
+        Turn[2,string] = "X"
+    }
+    
+    Win = "game"
+    EGP:egpClear()
+    EGP:egpDrawTopLeft(1)
+    I=0
+    
+    I++
+    EGP:egpBox(I,vec2(0,0),vec2(512,512))
+    EGP:egpColor(I,vec(50))
+    
+    I++
+    EGP:egpText(I,"Tic Tac Toe",vec2(0,-175))
+    EGP:egpSize(I,75)
+    EGP:egpColor(I,vec(255))
+    EGP:egpAlign(I,1,1)
+    EGP:egpParent(I,I-1)
+    
+    I++
+    EGP:egpBox(I,vec2(101,140),vec2(310,310))
+    
+    # 1st Row
+    
+    I++
+    EGP:egpBox(I,vec2(101,140),vec2(100,100))
+    EGP:egpColor(I,vec(50))
+    
+    I++
+    EGP:egpText(I,Table[1,string],vec2(0,0))
+    EGP:egpSize(I,50)
+    EGP:egpColor(I,vec(255))
+    EGP:egpAlign(I,1,1)
+    EGP:egpParent(I,I-1)
+    
+    I++
+    EGP:egpBox(I,vec2(206,140),vec2(100,100))
+    EGP:egpColor(I,vec(50))
+    
+    I++
+    EGP:egpText(I,Table[2,string],vec2(0,0))
+    EGP:egpSize(I,50)
+    EGP:egpColor(I,vec(255))
+    EGP:egpAlign(I,1,1)
+    EGP:egpParent(I,I-1)
+    
+    
+    I++
+    EGP:egpBox(I,vec2(311,140),vec2(100,100))
+    EGP:egpColor(I,vec(50))
+    
+    I++
+    EGP:egpText(I,Table[3,string],vec2(0,0))
+    EGP:egpSize(I,50)
+    EGP:egpColor(I,vec(255))
+    EGP:egpAlign(I,1,1)
+    EGP:egpParent(I,I-1)
+    
+    
+    # 2nd Row
+    
+    I++
+    EGP:egpBox(I,vec2(101,245),vec2(100,100))
+    EGP:egpColor(I,vec(50))
+    
+    I++
+    EGP:egpText(I,Table[4,string],vec2(0,0))
+    EGP:egpSize(I,50)
+    EGP:egpColor(I,vec(255))
+    EGP:egpAlign(I,1,1)
+    EGP:egpParent(I,I-1)
+    
+    
+    I++
+    EGP:egpBox(I,vec2(206,245),vec2(100,100))
+    EGP:egpColor(I,vec(50))
+    
+    I++
+    EGP:egpText(I,Table[5,string],vec2(0,0))
+    EGP:egpSize(I,50)
+    EGP:egpColor(I,vec(255))
+    EGP:egpAlign(I,1,1)
+    EGP:egpParent(I,I-1)
+    
+    
+    I++
+    EGP:egpBox(I,vec2(311,245),vec2(100,100))
+    EGP:egpColor(I,vec(50))
+    
+    I++
+    EGP:egpText(I,Table[6,string],vec2(0,0))
+    EGP:egpSize(I,50)
+    EGP:egpColor(I,vec(255))
+    EGP:egpAlign(I,1,1)
+    EGP:egpParent(I,I-1)
+    
+    
+    # 3rd Row
+    
+    I++
+    EGP:egpBox(I,vec2(101,350),vec2(100,100))
+    EGP:egpColor(I,vec(50))
+    
+    I++
+    EGP:egpText(I,Table[7,string],vec2(0,0))
+    EGP:egpSize(I,50)
+    EGP:egpColor(I,vec(255))
+    EGP:egpAlign(I,1,1)
+    EGP:egpParent(I,I-1)
+    
+    
+    I++
+    EGP:egpBox(I,vec2(206,350),vec2(100,100))
+    EGP:egpColor(I,vec(50))
+    
+    I++
+    EGP:egpText(I,Table[8,string],vec2(0,0))
+    EGP:egpSize(I,50)
+    EGP:egpColor(I,vec(255))
+    EGP:egpAlign(I,1,1)
+    EGP:egpParent(I,I-1)
+    
+    
+    I++
+    EGP:egpBox(I,vec2(311,350),vec2(100,100))
+    EGP:egpColor(I,vec(50))
+    
+    I++
+    EGP:egpText(I,Table[9,string],vec2(0,0))
+    EGP:egpSize(I,50)
+    EGP:egpColor(I,vec(255))
+    EGP:egpAlign(I,1,1)
+    EGP:egpParent(I,I-1)
+    
+    if(Table[1,string]) {
+        if(Table[1,string] == Table[2,string] & Table[2,string] == Table[3,string]) { #
+            win(1)
+        }
+        elseif(Table[1,string] == Table[5,string] & Table[5,string] == Table[9,string]) { #
+            win(2)
+        }
+        elseif(Table[1,string] == Table[4,string] & Table[4,string] == Table[7,string]) { #
+            win(3)
+        }
+    }
+    if(Table[2,string]) {
+        if(Table[2,string] == Table[5,string] & Table[5,string] == Table[8,string]) { #
+            win(4)
+        }
+    }
+    if(Table[3,string]) {
+        if(Table[3,string] == Table[6,string] & Table[6,string] == Table[9,string]) {
+            win(5)
+        }
+    }
+    if(Table[4,string]) {
+        if(Table[4,string] == Table[5,string] & Table[5,string] == Table[6,string]) {
+            win(6)
+        }
+    }
+    if(Table[7,string]) {
+        if(Table[7,string] == Table[8,string] & Table[8,string] == Table[9,string]) {
+            win(7)
+        }
+        elseif(Table[7,string] == Table[5,string] & Table[5,string] == Table[3,string]) {
+            win(8)
+        }
+    }
+    if(Cnt == 9) {
+        BottomText = " made it a draw."
+        timer("reset",3000)
+    }
+    
+    Cnt++
+    
+    I++
+    EGP:egpText(I,Turn[1,entity]:name() + BottomText,vec2(0,75))
+    EGP:egpSize(I,20)
+    EGP:egpColor(I,vec(225))
+    EGP:egpAlign(I,1,1)
+    EGP:egpParent(I,I-3)
+}
+
+if(clk("reset")) {
+    Players = array(noentity(),noentity())
+    Turn = array(noentity(),"")
+    BottomText = "'s Turn"
+    Table = table(array("","","","","","","","",""))
+    Cnt = 0
+    title()
+}
+
+event input(S:string) {
+    if(S == "User" & User) {
+        if(Win == "title") {
+            if(inrange(EGP:egpCursor(User), EGP:egpPos(3), EGP:egpPos(3) + EGP:egpSize(3))) {
+                join(0,noentity())
+            }
+        }
+        elseif(Win == "join") {
+            stopAllTimers()
+            if(inrange(EGP:egpCursor(User), EGP:egpPos(3), EGP:egpPos(3) + EGP:egpSize(3))) {
+                for(I=1,Players:count()) {
+                    if(Players[I,entity]) {
+                        exit()
+                    }
+                }
+                join(1,User)
+            }
+            elseif(inrange(EGP:egpCursor(User), EGP:egpPos(5), EGP:egpPos(5) + EGP:egpSize(5))) {
+                for(I=1,Players:count()) {
+                    if(User == Players[I,entity]) {
+                        exit()
+                    }
+                }
+                join(2,User)
+            }
+            elseif(inrange(EGP:egpCursor(User), EGP:egpPos(7), EGP:egpPos(7) + EGP:egpSize(7))) {
+                stopAllTimers()
+                game()
+            }
+        }
+        elseif(Win == "game") {
+            
+            if(User == Turn[1,entity]) {
+                if(inrange(EGP:egpCursor(User), EGP:egpPos(4), EGP:egpPos(4) + EGP:egpSize(4)) & !Table[1,string]) {
+                    Table[1,string] = Turn[2,string]
+                    game()
+                }
+                elseif(inrange(EGP:egpCursor(User), EGP:egpPos(6), EGP:egpPos(6) + EGP:egpSize(6)) & !Table[2,string]) {
+                    Table[2,string] = Turn[2,string]
+                    game()
+                }
+                elseif(inrange(EGP:egpCursor(User), EGP:egpPos(8), EGP:egpPos(8) + EGP:egpSize(8)) & !Table[3,string]) {
+                    Table[3,string] = Turn[2,string]
+                    game()
+                }
+                elseif(inrange(EGP:egpCursor(User), EGP:egpPos(10), EGP:egpPos(10) + EGP:egpSize(10)) & !Table[4,string]) {
+                    Table[4,string] = Turn[2,string]
+                    game()
+                }
+                elseif(inrange(EGP:egpCursor(User), EGP:egpPos(12), EGP:egpPos(12) + EGP:egpSize(12)) & !Table[5,string]) {
+                    Table[5,string] = Turn[2,string]
+                    game()
+                }
+                elseif(inrange(EGP:egpCursor(User), EGP:egpPos(14), EGP:egpPos(14) + EGP:egpSize(14)) & !Table[6,string]) {
+                    Table[6,string] = Turn[2,string]
+                    game()
+                }
+                elseif(inrange(EGP:egpCursor(User), EGP:egpPos(16), EGP:egpPos(16) + EGP:egpSize(16)) & !Table[7,string]) {
+                    Table[7,string] = Turn[2,string]
+                    game()
+                }
+                elseif(inrange(EGP:egpCursor(User), EGP:egpPos(18), EGP:egpPos(18) + EGP:egpSize(18)) & !Table[8,string]) {
+                    Table[8,string] = Turn[2,string]
+                    game()
+                }
+                elseif(inrange(EGP:egpCursor(User), EGP:egpPos(20), EGP:egpPos(20) + EGP:egpSize(20)) & !Table[9,string]) {
+                    Table[9,string] = Turn[2,string]
+                    game()
+                }
+            }
+        }
+    }
+}
