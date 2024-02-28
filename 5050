@@ -2,6 +2,8 @@
 @inputs EGP:wirelink User:entity
 @persist Active 
 
+# Place E2 On an EGP3 Screen.
+
 if(first()) {
     entity():setMaterial("Models/effects/vol_light001")
     entity():createWire(entity():isWeldedTo(), "EGP", "wirelink")
