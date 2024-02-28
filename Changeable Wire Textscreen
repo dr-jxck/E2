@@ -1,0 +1,46 @@
+@name Changeable Wire Textscreen
+@outputs String:string BGColor:vector FGColor:vector
+@persist String:string BGColor:vector FGColor:vector
+
+Prefix = "$"
+
+if(first()) {
+    #Default Values
+    String = "$help"
+    BGColor = vec(0,0,255)
+    FGColor = vec(0,0,0)
+}
+
+event chat(Ply:entity, Msg:string, X) {
+    X=X
+    if(Ply == owner() & Msg:left(Prefix:length()) == Prefix) {
+        CMD = Msg:explode(Prefix)[2,string]:explode(" ")[2,string]
+        Param = Msg:explode(Prefix + CMD + " ")[2,string]
+        Vec = Vec = vec(Param:explode(" ")[1,string]:toNumber(),Param:explode(" ")[2,string]:toNumber(),Param:explode(" ")[3,string]:toNumber())
+        
+        if(CMD == "text") {
+            String = Param
+            print("Updated textscreen.")
+        }
+            
+        if(CMD == "bgcolor") {
+            BGColor = Vec
+            print("Updated Background Color.")
+        }
+            
+        if(CMD == "fontcolor") {
+            FGColor = Vec
+            print("Updated Font Color.")
+        }
+            
+        if(CMD == "help") {
+            print("Commands:")
+            print(Prefix + "text <text>")
+            print(Prefix + "bgcolor <number> <number> <number> ")
+            print(Prefix + "fontcolor <number> <number> <number> ")
+        }
+        hideChat(1)
+    }
+}
+
+# made by dr. jxck
