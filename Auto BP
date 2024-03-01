@@ -1,5 +1,5 @@
 @name Auto BP
-@persist [Active, Prefix]:string CMDS:array J L
+@persist [Active, Prefix]:string CMDS:array J
 
 function void pprint(Ctx:string) {
     printColor(vec(100,100,255),"Auto BP",vec(225)," | ",vec(255),Ctx)
@@ -15,7 +15,6 @@ if(first()) {
     CMDS = array("prop","gun","job","shipment","ammo","door","lockpick")
     Active = ""
     J = 0
-    L = 0
     
     pprint("Use '" + Prefix + "' for commands list.")
     
@@ -79,7 +78,7 @@ if(clk("door")) {
 if(clk("ammo")) {
     if(Active == "ammo") {
         concmd("darkrp buyammo ammo_stungun") 
-        timer("Ammo", 500)
+        timer("ammo", 500)
     }
 }
 
