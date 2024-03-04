@@ -101,7 +101,7 @@ if(clk("shipment")) {
     if(Active == "shipment") {
         if(owner():team():teamName() == "Bartender") {
             concmd("darkrp buyshipment water") 
-            timer("ship", 500)
+            timer("shipment", 500)
         }
         else {
             concmd("say /bartender")
